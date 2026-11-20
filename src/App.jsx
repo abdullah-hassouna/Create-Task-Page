@@ -1,12 +1,12 @@
-import { useState } from "react";
+import Input from "./components/input";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  return <section id="center">
-
-  </section>;
+  return (
+    <section style={{ background: "var(--primary-forg-color)" }}>
+      <Input type="text" label="Internship ID" required hint="Program ID" />
+    </section>
+  );
 }
 
 export default App;
