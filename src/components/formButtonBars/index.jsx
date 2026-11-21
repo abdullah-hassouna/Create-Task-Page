@@ -3,7 +3,7 @@ import BellIcon from "../icons/bellIcon";
 import SubmitIcon from "../icons/submitIcon";
 
 /**
- * @param {{ "loading" : boolean, "saveDraftFunc": (values: any) => void }} _
+ * @param {{ "loading"?: boolean, "saveDraftFunc": (values: any) => void }} _
  */
 function FormButtonBars({ loading, saveDraftFunc }) {
   const { values } = useFormikContext();

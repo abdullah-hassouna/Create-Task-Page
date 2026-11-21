@@ -42,10 +42,11 @@ function DraftSaver() {
  * @returns
  */
 function Form({ initialValues, ...rest }) {
-  const { createTask, error, loading } = useFormHook();
+  const { createTask, error, loading, resetStates } = useFormHook();
 
   const validate = (/** @type {unknown} */ values) => {
     const result = internshipSchema.safeParse(values);
+    console.log(result)
     if (result.success) return {};
     const errors = {};
     JSON.parse(result.error.message).forEach(
@@ -61,16 +62,19 @@ function Form({ initialValues, ...rest }) {
   return (
     <div className="main-form" {...rest}>
       <Formik
-        initialValues={getSavedDraft(initialValues)} // <-- Loads saved draft if it exists
+        initialValues={getSavedDraft(initialValues)}
         validate={validate}
-        onSubmit={async (values, { resetForm }) => {
+        onSubmit={async (values, { resetForm, setSubmitting }) => {
           try {
             const response = await createTask(values);
             alert(response.message || "Task created successfully!");
-            localStorage.removeItem(DRAFT_KEY);
             resetForm();
+            localStorage.removeItem(DRAFT_KEY);
           } catch (err) {
             alert(error);
+          } finally {
+            setSubmitting(false)
+            resetStates();
           }
         }}
       >
