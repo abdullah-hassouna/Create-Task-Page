@@ -6,6 +6,18 @@ export const MAX_ATTACHMENTS = 5;
 
 export const ACCEPTED_MIME_TYPES = ["application/pdf"];
 
+export const STATUS_OPTIONS = [
+  { vlaue: "TODO", label: "ToDo" },
+  { vlaue: "IN_PROGRESS", label: "In Progress" },
+  { vlaue: "DONE", label: "Done" },
+];
+
+export const DIFFICULTY_OPTIONS = [
+  { vlaue: "BEGINNER", label: "Beginner" },
+  { vlaue: "INTERMEDIATE", label: "Intermediate" },
+  { vlaue: "ADVANCED", label: "Advanced" },
+];
+
 // One upload response (matches the Swagger attachment object)
 export const attachmentSchema = z.object({
   fileName: z.string().trim().min(1, "File name is required"),
@@ -52,28 +64,24 @@ export const internshipSchema = z
       .min(3, "Title must be at least 3 characters")
       .max(100),
     description: z
-      .optional()
       .string()
       .trim()
       .min(20, "Description must be at least 20 characters")
-      .max(2000, "Description must be at most 2000 characters"),
-
+      .max(2000, "Description must be at most 2000 characters")
+      .optional(),
     // 2. Classification
     category: z
-      .optional()
       .string()
       .trim()
       .min(5, "category must be at least 5 characters")
-      .max(20, "category must be at most 20 characters"),
-
-    difficulty: z.optional().enum(["BEGINNER", "INTERMEDIATE", "ADVANCED "], {
-      errorMap: () => ({ message: "Please select a difficulty" }),
-    }),
-    status: z.optional().enum(["TODO", "IN_PROGRESS", "DONE"]),
+      .max(20, "category must be at most 20 characters")
+      .optional(),
+    difficulty: z.enum(DIFFICULTY_OPTIONS.map(({ value }) => value)).optional(),
+    status: z.enum(STATUS_OPTIONS.map(({ value }) => value)).optional(),
 
     // 3. Dates
-    startDate: z.optional().string().min(1, "Start date is required"),
-    deadline: z.optional().string().min(1, "Deadline is required"),
+    startDate: z.string().min(1, "Start date is required").optional(),
+    deadline: z.string().min(1, "Deadline is required").optional(),
 
     // 4. Evaluation criteria (free text name + weight %)
     evaluationCriteria: z.optional().array(evaluationCriterionSchema),
