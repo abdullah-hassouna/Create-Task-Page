@@ -22,7 +22,7 @@ function Form({ initialValues, ...rest }) {
     const result = internshipSchema.safeParse(values);
     if (result.success) return {};
     const errors = {};
-    result.error.errors.forEach(
+    JSON.parse(result.error.message).forEach(
       (/** @type {{ path: any[]; message: any; }} */ err) => {
         const path = err.path.join(".");
         if (!errors[path]) errors[path] = err.message;
@@ -38,6 +38,7 @@ function Form({ initialValues, ...rest }) {
         validate={validate}
         onSubmit={async (values, { resetForm }) => {
           try {
+            // console.log(values);
             const response = await createTask(values);
             alert(response.message || "Task created successfully!");
             resetForm();
@@ -74,7 +75,6 @@ function Form({ initialValues, ...rest }) {
             />
 
             <FormButtonBars loading={loading || formik.isSubmitting} />
-
           </form>
         )}
       </Formik>

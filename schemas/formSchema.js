@@ -65,19 +65,35 @@ export const internshipSchema = z
     description: z
       .string()
       .trim()
-      .min(20, "Description must be at least 20 characters")
-      .max(2000, "Description must be at most 2000 characters")
-      .optional(),
+      .min(20)
+      .max(2000)
+      .optional()
+      .or(z.literal("")),
     category: z
       .string()
       .trim()
       .min(5, "category must be at least 5 characters")
       .max(20, "category must be at most 20 characters")
-      .optional(),
-    difficulty: z.enum(DIFFICULTY_OPTIONS.map(({ value }) => value)).optional(),
-    status: z.enum(STATUS_OPTIONS.map(({ value }) => value)).optional(),
-    startDate: z.string().min(1, "Start date is required").optional(),
-    deadline: z.string().min(1, "Deadline is required").optional(),
+      .optional()
+      .or(z.literal("")),
+    difficulty: z
+      .enum(DIFFICULTY_OPTIONS.map(({ value }) => value))
+      .optional()
+      .or(z.literal("")),
+    status: z
+      .enum(STATUS_OPTIONS.map(({ value }) => value))
+      .optional()
+      .or(z.literal("")),
+    startDate: z
+      .string()
+      .min(1, "Start date is required")
+      .optional()
+      .or(z.literal("")),
+    deadline: z
+      .string()
+      .min(1, "Deadline is required")
+      .optional()
+      .or(z.literal("")),
     evaluationCriteria: z.optional().array(evaluationCriterionSchema),
     attachments: attachmentsSchema,
   })
