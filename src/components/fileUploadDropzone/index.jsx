@@ -1,5 +1,6 @@
-// @ts-nocheck
 import React, { useRef, useState } from "react";
+import UploadIcon from "../icons/uploadIcon";
+import SpinnerIcon from "../icons/spinnerIcon";
 
 /**
  * @param {React.ComponentProps<'div'> & {
@@ -11,24 +12,32 @@ function FileUploadDropzone({ onFilesSelected, isUploading, ...rest }) {
   const [isDragActive, setIsDragActive] = useState(false);
   const inputRef = useRef(null);
 
-  const handleDragEnter = (e) => {
+  const handleDragEnter = (
+    /** @type {{ preventDefault: () => void; stopPropagation: () => void; }} */ e,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragActive(true);
   };
 
-  const handleDragLeave = (e) => {
+  const handleDragLeave = (
+    /** @type {{ preventDefault: () => void; stopPropagation: () => void; }} */ e,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragActive(false);
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (
+    /** @type {{ preventDefault: () => void; stopPropagation: () => void; }} */ e,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (
+    /** @type {{ preventDefault: () => void; stopPropagation: () => void; dataTransfer: { files: FileList; }; }} */ e,
+  ) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragActive(false);
@@ -39,7 +48,9 @@ function FileUploadDropzone({ onFilesSelected, isUploading, ...rest }) {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (
+    /** @type {{ target: { files: string | any[] | FileList; }; }} */ e,
+  ) => {
     if (e.target.files && e.target.files.length > 0) {
       onFilesSelected(e.target.files);
     }
@@ -69,38 +80,7 @@ function FileUploadDropzone({ onFilesSelected, isUploading, ...rest }) {
       />
 
       <div className="upload-icon-wrapper">
-        {isUploading ? (
-          /* Loading Spinner */
-          <svg
-            className="spinner"
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#1e40af"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-          </svg>
-        ) : (
-          /* Cloud Icon */
-          <svg
-            width="32"
-            height="32"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#1e40af"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
-            <path d="M12 15V9" />
-            <path d="m9 12 3-3 3 3" />
-          </svg>
-        )}
+        {isUploading ? <SpinnerIcon className="spinner" /> : <UploadIcon />}
       </div>
 
       <h4 className="upload-title">

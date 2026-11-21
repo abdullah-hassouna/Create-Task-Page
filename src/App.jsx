@@ -1,3 +1,4 @@
+// @ts-ignore
 import "./App.css";
 import Form from "./components/form";
 import { internshipInitialValues } from "../schemas/formSchema";

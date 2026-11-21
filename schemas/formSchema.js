@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { z } from "zod";
+import { required } from "zod/mini";
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const MAX_ATTACHMENTS = 5;
@@ -42,21 +43,14 @@ const evaluationCriterionSchema = z.object({
     .min(2, "Criterion name must be at least 2 characters")
     .max(100, "Criterion name must be at most 100 characters"),
   weight: z
-    .number({
-      required_error: "Weight is required",
-      invalid_type_error: "Weight must be a number",
-    })
+    .number("Weight is required as Number")
     .min(0, "Weight must be at least 0")
     .max(100, "Weight must be at most 100"),
 });
 
 export const internshipSchema = z
   .object({
-    internshipId: z.coerce
-      .number()
-      .refine((val) => [12, 13, 14].includes(val), {
-        message: "Please select an Internship",
-      }),
+    internshipId: z.number("Insert an exsist intership"),
     title: z
       .string()
       .trim()

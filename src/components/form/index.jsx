@@ -1,4 +1,5 @@
-import { Formik } from "formik";
+import { Formik, useFormikContext } from "formik";
+import { useEffect } from "react";
 import BasicInformationForm from "./basicInfoForm";
 import FeedbackBoardIcon from "../icons/feedbackBoard";
 import EvaluationCriteriaForm from "./evaluationForm";
@@ -8,15 +9,40 @@ import AttachmentsForm from "./AttachmentsForm";
 import InfoBanner from "../infoBanner";
 import { internshipSchema } from "../../../schemas/formSchema";
 import FormButtonBars from "../formButtonBars";
+import AttachementIcon from "../icons/attachementIcon";
+
+const DRAFT_KEY = "internship_task_draft";
+
+const getSavedDraft = (/** @type {any} */ defaultValues) => {
+  try {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    return saved ? { ...defaultValues, ...JSON.parse(saved) } : defaultValues;
+  } catch (err) {
+    return defaultValues;
+  }
+};
+
+const savefunc = (/** @type {any} */ values) => {
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(values));
+};
+
+function DraftSaver() {
+  const { values } = useFormikContext();
+
+  useEffect(() => {
+    savefunc(values);
+  }, [values]);
+
+  return null;
+}
 
 /**
  *
  * @param {{ "initialValues" : any }} param0
  * @returns
  */
-
 function Form({ initialValues, ...rest }) {
-  const { createTask, loading } = useFormHook();
+  const { createTask, error, loading } = useFormHook();
 
   const validate = (/** @type {unknown} */ values) => {
     const result = internshipSchema.safeParse(values);
@@ -25,6 +51,7 @@ function Form({ initialValues, ...rest }) {
     JSON.parse(result.error.message).forEach(
       (/** @type {{ path: any[]; message: any; }} */ err) => {
         const path = err.path.join(".");
+        // @ts-ignore
         if (!errors[path]) errors[path] = err.message;
       },
     );
@@ -34,16 +61,16 @@ function Form({ initialValues, ...rest }) {
   return (
     <div className="main-form" {...rest}>
       <Formik
-        initialValues={initialValues}
+        initialValues={getSavedDraft(initialValues)} // <-- Loads saved draft if it exists
         validate={validate}
         onSubmit={async (values, { resetForm }) => {
           try {
-            // console.log(values);
             const response = await createTask(values);
             alert(response.message || "Task created successfully!");
+            localStorage.removeItem(DRAFT_KEY);
             resetForm();
           } catch (err) {
-            // Error is already set in the hook, you can show a toast here
+            alert(error);
           }
         }}
       >
@@ -52,6 +79,9 @@ function Form({ initialValues, ...rest }) {
             onSubmit={formik.handleSubmit}
             style={{ display: "flex", flexDirection: "column", gap: "20px" }}
           >
+            {/* Silently tracks and saves values to localStorage */}
+            <DraftSaver />
+
             <BasicInformationForm
               title={"Basic Information"}
               order={1}
@@ -67,14 +97,21 @@ function Form({ initialValues, ...rest }) {
               Icon={<CorrectIcon className="Icon" />}
             />
 
-            <AttachmentsForm />
+            <AttachmentsForm
+              title={"Attachments & Supporting Documents"}
+              order={3}
+              Icon={<AttachementIcon className="Icon" />}
+            />
 
             <InfoBanner
               title="Direct Academic Supervision"
               desc="Field mentors will automatically review intern submissions based on your criteria."
             />
 
-            <FormButtonBars loading={loading || formik.isSubmitting} />
+            <FormButtonBars
+              saveDraftFunc={savefunc}
+              loading={loading || formik.isSubmitting}
+            />
           </form>
         )}
       </Formik>

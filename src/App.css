@@ -293,17 +293,6 @@ textarea {
   display: none;
 }
 
-.upload-icon-wrapper {
-  width: 64px;
-  height: 64px;
-  background: #e0e7ff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
 .upload-title {
   color: #131b2e;
   font-size: 18px;

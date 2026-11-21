@@ -31,6 +31,7 @@ function BasicInformationForm({ title, order, Icon, ...rest }) {
 
       <Input
         required
+        type="number"
         label="Internship ID"
         hint="Program ID"
         desc="This ID links the task to the academic internship registry records."

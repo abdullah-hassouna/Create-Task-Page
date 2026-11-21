@@ -32,7 +32,7 @@ function useFormHook() {
         // Return the array of uploaded files exactly as Formik/Zod needs it
         return response.data.data;
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to upload files");
+        setError(err.response?.message || "Failed to upload files");
         throw err;
       } finally {
         setLoading(false);
@@ -68,7 +68,7 @@ function useFormHook() {
         setRes(response.data);
         return response.data;
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to create task");
+        setError(err.response?.message || "Failed to create task");
         throw err;
       } finally {
         setLoading(false);

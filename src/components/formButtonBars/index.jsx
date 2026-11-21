@@ -1,10 +1,13 @@
+import { useFormikContext } from "formik";
 import BellIcon from "../icons/bellIcon";
 import SubmitIcon from "../icons/submitIcon";
 
 /**
- * @param {{ "loading" : boolean }} _
+ * @param {{ "loading" : boolean, "saveDraftFunc": (values: any) => void }} _
  */
-function FormButtonBars({ loading }) {
+function FormButtonBars({ loading, saveDraftFunc }) {
+  const { values } = useFormikContext();
+
   return (
     <div className="form-button-bars">
       <div>
@@ -13,7 +16,13 @@ function FormButtonBars({ loading }) {
       </div>
 
       <div>
-        <button>
+        <button
+          type="button"
+          onClick={() => {
+            alert("Draft Saved");
+            saveDraftFunc(values);
+          }}
+        >
           <span>Cancel / Save Draft</span>
         </button>
         <button disabled={loading} type="submit">
