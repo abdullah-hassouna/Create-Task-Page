@@ -1,26 +1,33 @@
-// @ts-nocheck
 import { Formik } from "formik";
-import React from "react";
 import BasicInformationForm from "./basicInfoForm";
 import FeedbackBoardIcon from "../icons/feedbackBoard";
 import EvaluationCriteriaForm from "./evaluationForm";
 import CorrectIcon from "../icons/correctIcon";
+import useFormHook from "../../../hooks/api/useFormHook";
+import AttachmentsForm from "./AttachmentsForm";
+import InfoBanner from "../infoBanner";
 import { internshipSchema } from "../../../schemas/formSchema";
+import FormButtonBars from "../formButtonBars";
 
-function Form({
-  initialValues,
-  evaluationCriteriaInfoFields,
-  attachmentsFields,
-  ...rest
-}) {
-  const validate = (values) => {
+/**
+ *
+ * @param {{ "initialValues" : any }} param0
+ * @returns
+ */
+
+function Form({ initialValues, ...rest }) {
+  const { createTask, loading } = useFormHook();
+
+  const validate = (/** @type {unknown} */ values) => {
     const result = internshipSchema.safeParse(values);
     if (result.success) return {};
     const errors = {};
-    result.error.errors.forEach((err) => {
-      const path = err.path.join(".");
-      if (!errors[path]) errors[path] = err.message;
-    });
+    result.error.errors.forEach(
+      (/** @type {{ path: any[]; message: any; }} */ err) => {
+        const path = err.path.join(".");
+        if (!errors[path]) errors[path] = err.message;
+      },
+    );
     return errors;
   };
 
@@ -29,8 +36,14 @@ function Form({
       <Formik
         initialValues={initialValues}
         validate={validate}
-        onSubmit={(values) => {
-          console.log("Form Submitted", values);
+        onSubmit={async (values, { resetForm }) => {
+          try {
+            const response = await createTask(values);
+            alert(response.message || "Task created successfully!");
+            resetForm();
+          } catch (err) {
+            // Error is already set in the hook, you can show a toast here
+          }
         }}
       >
         {(formik) => (
@@ -53,9 +66,15 @@ function Form({
               Icon={<CorrectIcon className="Icon" />}
             />
 
-            <button type="submit" className="submit-btn">
-              Submit
-            </button>
+            <AttachmentsForm />
+
+            <InfoBanner
+              title="Direct Academic Supervision"
+              desc="Field mentors will automatically review intern submissions based on your criteria."
+            />
+
+            <FormButtonBars loading={loading || formik.isSubmitting} />
+
           </form>
         )}
       </Formik>
