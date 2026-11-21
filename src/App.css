@@ -484,3 +484,125 @@ textarea {
   color: #fff;
   background: var(--dark-blue-color);
 }
+
+.task-header-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "LiberationSerif-regular", serif;
+  margin-bottom: 20px;
+}
+
+/* =========================================
+   STATE PREVIEW BAR
+   ========================================= */
+.state-preview-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eef2ff;
+  padding: 8px 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.preview-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #0038a8;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.preview-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.preview-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-family: "LiberationSerif-bold", serif;
+  font-size: 14px;
+  color: #434655;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preview-btn:hover {
+  background: #e0e7ff;
+}
+
+.preview-btn.active {
+  background: #0038a8;
+  color: #ffffff;
+}
+
+/* =========================================
+   PAGE HEADER
+   ========================================= */
+.page-header-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #434655;
+  font-weight: 600;
+}
+
+.breadcrumbs .separator {
+  color: #747686;
+}
+
+.breadcrumbs .active-crumb {
+  color: #0038a8;
+}
+
+.page-title {
+  color: #131b2e;
+  font-family: "LiberationSerif-bold", serif;
+  font-size: 42px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  color: #434655;
+  font-size: 16px;
+  margin: 0;
+  max-width: 800px;
+  line-height: 1.5;
+}
+
+.cohort-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #e0e7ff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+
+.cohort-badge .dot {
+  width: 8px;
+  height: 8px;
+  background: #0038a8;
+  border-radius: 50%;
+}
+
+.cohort-badge span:last-child {
+  color: #131b2e;
+  font-family: "LiberationSerif-bold", serif;
+  font-size: 14px;
+}

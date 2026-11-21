@@ -1,5 +1,5 @@
 import { Formik, useFormikContext } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BasicInformationForm from "./basicInfoForm";
 import FeedbackBoardIcon from "../icons/feedbackBoard";
 import EvaluationCriteriaForm from "./evaluationForm";
@@ -10,6 +10,7 @@ import InfoBanner from "../infoBanner";
 import { internshipSchema } from "../../../schemas/formSchema";
 import FormButtonBars from "../formButtonBars";
 import AttachementIcon from "../icons/attachementIcon";
+import CreateTaskHeader from "../createTaskHeader";
 
 const DRAFT_KEY = "internship_task_draft";
 
@@ -43,10 +44,11 @@ function DraftSaver() {
  */
 function Form({ initialValues, ...rest }) {
   const { createTask, error, loading, resetStates } = useFormHook();
+  const [previewState, setPreviewState] = useState("default");
 
   const validate = (/** @type {unknown} */ values) => {
     const result = internshipSchema.safeParse(values);
-    console.log(result)
+    console.log(result);
     if (result.success) return {};
     const errors = {};
     JSON.parse(result.error.message).forEach(
@@ -61,6 +63,11 @@ function Form({ initialValues, ...rest }) {
 
   return (
     <div className="main-form" {...rest}>
+      <CreateTaskHeader
+        // @ts-ignore
+        activeState={previewState}
+        onStateChange={setPreviewState}
+      />
       <Formik
         initialValues={getSavedDraft(initialValues)}
         validate={validate}
@@ -73,7 +80,7 @@ function Form({ initialValues, ...rest }) {
           } catch (err) {
             alert(error);
           } finally {
-            setSubmitting(false)
+            setSubmitting(false);
             resetStates();
           }
         }}
