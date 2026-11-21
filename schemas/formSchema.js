@@ -1,24 +1,23 @@
 // @ts-nocheck
 import { z } from "zod";
 
-export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB, match your backend
+export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const MAX_ATTACHMENTS = 5;
 
 export const ACCEPTED_MIME_TYPES = ["application/pdf"];
 
 export const STATUS_OPTIONS = [
-  { vlaue: "TODO", label: "ToDo" },
-  { vlaue: "IN_PROGRESS", label: "In Progress" },
-  { vlaue: "DONE", label: "Done" },
+  { value: "TODO", label: "ToDo" },
+  { value: "IN_PROGRESS", label: "In Progress" },
+  { value: "DONE", label: "Done" },
 ];
 
 export const DIFFICULTY_OPTIONS = [
-  { vlaue: "BEGINNER", label: "Beginner" },
-  { vlaue: "INTERMEDIATE", label: "Intermediate" },
-  { vlaue: "ADVANCED", label: "Advanced" },
+  { value: "BEGINNER", label: "Beginner" },
+  { value: "INTERMEDIATE", label: "Intermediate" },
+  { value: "ADVANCED", label: "Advanced" },
 ];
 
-// One upload response (matches the Swagger attachment object)
 export const attachmentSchema = z.object({
   fileName: z.string().trim().min(1, "File name is required"),
   fileUrl: z.string().min(1, "File URL is required"),
@@ -32,7 +31,6 @@ export const attachmentSchema = z.object({
   }),
 });
 
-// The list held by the form
 export const attachmentsSchema = z
   .array(attachmentSchema)
   .max(MAX_ATTACHMENTS, `You can attach up to ${MAX_ATTACHMENTS} files`);
@@ -54,10 +52,11 @@ const evaluationCriterionSchema = z.object({
 
 export const internshipSchema = z
   .object({
-    // 1. Basic info
-    internshipId: z.enum([12, 13, 14], {
-      errorMap: () => ({ message: "Please select a Internship" }),
-    }),
+    internshipId: z.coerce
+      .number()
+      .refine((val) => [12, 13, 14].includes(val), {
+        message: "Please select an Internship",
+      }),
     title: z
       .string()
       .trim()
@@ -69,7 +68,6 @@ export const internshipSchema = z
       .min(20, "Description must be at least 20 characters")
       .max(2000, "Description must be at most 2000 characters")
       .optional(),
-    // 2. Classification
     category: z
       .string()
       .trim()
@@ -78,15 +76,9 @@ export const internshipSchema = z
       .optional(),
     difficulty: z.enum(DIFFICULTY_OPTIONS.map(({ value }) => value)).optional(),
     status: z.enum(STATUS_OPTIONS.map(({ value }) => value)).optional(),
-
-    // 3. Dates
     startDate: z.string().min(1, "Start date is required").optional(),
     deadline: z.string().min(1, "Deadline is required").optional(),
-
-    // 4. Evaluation criteria (free text name + weight %)
     evaluationCriteria: z.optional().array(evaluationCriterionSchema),
-
-    // 5. Attachments (separate schema, imported)
     attachments: attachmentsSchema,
   })
   .superRefine((data, ctx) => {
@@ -98,11 +90,10 @@ export const internshipSchema = z
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Deadline must be on or after the start date",
-        path: ["deadline", "startDate"],
+        path: ["deadline"],
       });
     }
 
-    // Weights must total exactly 100%
     const total =
       data.evaluationCriteria.length > 1
         ? data.evaluationCriteria.reduce((sum, c) => sum + (c.weight || 0), 0)

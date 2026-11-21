@@ -1,25 +1,17 @@
 // @ts-nocheck
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 /**
- * @param {React.ComponentProps<'input'> &
- * {
- *  "label": string,
- *  "desc"?: string,
- *  "hint"?: string,
- *  "error"?: string,
- * }} props
+ * @param {React.ComponentProps<'input'> & { label: string, desc?: string, hint?: string, error?: string | boolean | string[] | object }} props
  */
 function DateInput(props) {
   const { label, value, onChange, hint, error, required, desc, ...rest } =
     props;
   const labelId = label?.toLowerCase().replaceAll(" ", "-");
-
   const hiddenInputRef = useRef(null);
 
   const [internalValue, setInternalValue] = useState(value || "");
 
-  // Sync with parent value if controlled
   useEffect(() => {
     if (value !== undefined) {
       setInternalValue(value);
@@ -35,25 +27,25 @@ function DateInput(props) {
           hiddenInputRef.current.focus();
           hiddenInputRef.current.click();
         }
-      } catch (error) {
-        console.warn("Date picker could not open", error);
+      } catch (err) {
+        console.warn("Date picker could not open", err);
       }
     }
   };
 
   const handleDateChange = (e) => {
-    setInternalValue(e.target.value);
-    if (onChange) onChange(e);
+    const newValue = e.target.value;
+    setInternalValue(newValue);
+    if (onChange) onChange(newValue);
   };
 
-  // Split the YYYY-MM-DD into parts for individual styling
   const dateParts = internalValue ? String(internalValue).split("-") : null;
   const year = dateParts?.[0];
   const month = dateParts?.[1];
   const day = dateParts?.[2];
 
   return (
-    <div className={"custom-input"}>
+    <div className="custom-input">
       <label id={labelId} htmlFor={labelId}>
         {label}
         <span style={{ color: "red", padding: "0 3px" }}>
@@ -62,7 +54,6 @@ function DateInput(props) {
       </label>
 
       <div className="custom-date-wrapper" onClick={handleOpenPicker}>
-        {/* Visual Display (Now a div with spans) */}
         <div className="visual-date-display">
           {internalValue ? (
             <>
@@ -77,7 +68,6 @@ function DateInput(props) {
           )}
         </div>
 
-        {/* Hidden Native Input */}
         <input
           type="date"
           ref={hiddenInputRef}
@@ -90,7 +80,9 @@ function DateInput(props) {
 
       <span className="hint">{hint}</span>
       <span>{desc}</span>
-      <span style={{ color: "red" }}>{error}</span>
+      {typeof error === "string" && (
+        <span style={{ color: "red" }}>{error}</span>
+      )}
     </div>
   );
 }

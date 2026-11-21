@@ -1,37 +1,51 @@
 import React from "react";
 
 /**
- * @param {React.ComponentProps<'input'> & React.ComponentProps<'textarea'> & React.ComponentProps<'select'> & { type?: (import("react").HTMLInputTypeAttribute) &  (import("react").HTMLInputTypeAttribute | "select" | "textbox" | undefined)} & { label: string } & { desc?: string } & { options?: any[] } & { hint?: string } & { error?: string }} props
+ * @param {React.ComponentProps<'input'> & React.ComponentProps<'textarea'> & React.ComponentProps<'select'> & { type?: (import("react").HTMLInputTypeAttribute) &  (import("react").HTMLInputTypeAttribute | "select" | "textbox" | undefined)} & { label: string } & { desc?: string } & { options?: any[] } & { hint?: string } & { error?: string | boolean | string[] | object }} props
  */
 function Input(props) {
-  const labelId = props.label?.toLowerCase().replaceAll(" ", "-");
+  const {
+    label,
+    type,
+    desc,
+    options,
+    hint,
+    error,
+    required,
+    className,
+    ...rest
+  } = props;
+
+  const labelId = label?.toLowerCase().replaceAll(" ", "-");
 
   return (
-    <div className={"custom-input"}>
+    <div className={`custom-input ${className || ""}`}>
       <label id={labelId} htmlFor={labelId}>
-        {props.label}
+        {label}
         <span style={{ color: "red", padding: "0 3px" }}>
-          {props.required ? "*" : ""}
+          {required ? "*" : ""}
         </span>
       </label>
-      {props.type === "textbox" ? (
-        <textarea rows={4} id={labelId} {...props}>
-          {props.value}
-        </textarea>
-      ) : props.type === "select" ? (
-        <select id={labelId} {...props}>
-          {props.options?.map((op) => (
-            <option id={op.value} value={op.value}>
+
+      {type === "textbox" ? (
+        <textarea rows={4} id={labelId} {...rest} />
+      ) : type === "select" ? (
+        <select id={labelId} {...rest}>
+          {options?.map((op) => (
+            <option key={op.value} value={op.value}>
               {op.label}
             </option>
           ))}
         </select>
       ) : (
-        <input id={labelId} {...props} />
+        <input id={labelId} type={type} {...rest} />
       )}
-      <span className="hint">{props.hint}</span>
-      <span>{props.desc}</span>
-      <span style={{ color: "red" }}>{props.error}</span>
+
+      <span className="hint">{hint}</span>
+      <span>{desc}</span>
+      {typeof error === "string" && (
+        <span style={{ color: "red" }}>{error}</span>
+      )}
     </div>
   );
 }

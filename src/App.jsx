@@ -14,9 +14,7 @@ function App() {
         attachmentsFields={{
           string: undefined,
         }}
-      >
-        <Input type="text" label="Internship ID" required hint="Program ID" />
-      </Form>
+      />
     </section>
   );
 }
