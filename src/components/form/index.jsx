@@ -5,7 +5,7 @@ import FeedbackBoardIcon from "../icons/feedbackBoard";
 import EvaluationCriteriaForm from "./evaluationForm";
 import CorrectIcon from "../icons/correctIcon";
 import useFormHook from "../../../hooks/api/useFormHook";
-import AttachmentsForm from "./AttachmentsForm";
+import AttachmentsForm from "./attachmentsForm";
 import InfoBanner from "../infoBanner";
 import { internshipSchema } from "../../../schemas/formSchema";
 import FormButtonBars from "../formButtonBars";
