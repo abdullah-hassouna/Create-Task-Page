@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormikContext } from "formik";
 import useFormHook from "../../../../hooks/api/useFormHook";
-import FileUploadDropzone from "../../FileUploadDropzone";
+import FileUploadDropzone from "../../fileUploadDropzone";
 
 const formatBytes = (/** @type {number} */ bytes, decimals = 1) => {
   if (!bytes) return "0 Bytes";
